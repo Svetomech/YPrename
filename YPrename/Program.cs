@@ -21,9 +21,8 @@ namespace YPrename
       Console.Title = Application.ProductName;
       mainWindowHandle = GetConsoleWindow();
 
-      string currentFolderPath = Directory.GetCurrentDirectory();
+      string currentFolderPath = Application.StartupPath;
 
-      Environment.CurrentDirectory = Application.StartupPath;
       var filesToRename = new List<string>(Directory.GetFiles(currentFolderPath, renameFilesOldPattern));
 
       renameFiles(filesToRename);
