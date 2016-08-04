@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using static Svetomech.Utilities.NativeMethods;
+using static Svetomech.Utilities.SimpleConsole;
 
 namespace YPrename
 {
@@ -11,24 +13,18 @@ namespace YPrename
     private const string renameFilesOldPattern = "YP-*1R-*";
     private const string renameFilesNewPattern = "*";
 
+    private static IntPtr mainWindowHandle;
+    // private static AutoResetEvent autoEvent;
+
     static void Main(string[] args)
     {
       Console.Title = Application.ProductName;
-      Console.WriteLine();
+      mainWindowHandle = GetConsoleWindow();
 
       string currentFolderPath = Directory.GetCurrentDirectory();
 
       var filesToRename = new List<string>(Directory.GetFiles(currentFolderPath, renameFilesOldPattern));
 
-      bool searchAccepted = confirmSearchDialog();
-
-      if (!searchAccepted)
-      {
-        messageLine("Exit.");
-        return;
-      }
-
-      Console.WriteLine();
       renameFiles(filesToRename);
 
       using (var watcher = new FileSystemWatcher())
@@ -41,46 +37,28 @@ namespace YPrename
 
         watcher.EnableRaisingEvents = true;
 
-        string searchPauseText = "stop";
-        Console.Title = $"{Application.ProductName}: Press 'p' to {searchPauseText} searching for new files.";
-
-        for (;;)
-        {
-          char pressedKey = char.ToLower(Console.ReadKey(true).KeyChar);
-
-          if ('p' != pressedKey)
-          {
-            continue;
-          }
-
-          watcher.EnableRaisingEvents = !watcher.EnableRaisingEvents;
-
-          searchPauseText = (searchPauseText == "stop") ? "continue" : "stop";
-          Console.Title = $"{Application.ProductName}: Press 'p' to {searchPauseText} searching for new files.";
-        }
+        Thread.Sleep(Timeout.Infinite); // autoEvent.WaitOne();
       }
     }
 
-    private static bool confirmSearchDialog()
+    private static bool confirmRenameDialog()
     {
-      Console.Write("Start searching for files to rename? [Y/n/?] ");
+      Console.Write(" [Y/n/?] ");
 
-      return (char.ToLower(Console.ReadKey(true).KeyChar) == 'y');
-    }
-
-    private static void messageLine(string text)
-    {
-      SimpleConsole.Line.ClearCurrent();
-      Console.WriteLine(text);
-      Console.ReadKey(true);
+      return (char.ToLower(Console.ReadKey().KeyChar) == 'y');
     }
 
     private static void renameFiles(List<string> filePaths)
     {
       if (0 == filePaths.Count)
       {
+        Console.Title = Application.ProductName;
+        ShowWindow(mainWindowHandle, SW_HIDE);
         return;
       }
+
+      Console.Title = $"{Application.ProductName}: NEW FILE FOUND";
+      ShowWindow(mainWindowHandle, SW_SHOW);
 
       string filePath = filePaths[filePaths.Count - 1];
       string fileDirectory = Path.GetDirectoryName(filePath);
@@ -95,14 +73,22 @@ namespace YPrename
       }
       string filePathRenamed = Path.Combine(fileDirectory, fileName);
 
-      if (!File.Exists(filePathRenamed) && !SimpleIO.Path.Equals(filePath, filePathRenamed))
+      Console.Write($"\n( ) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+      bool renamingAccepted = confirmRenameDialog();
+      Line.ClearCurrent();
+
+      if (!renamingAccepted)
       {
-        File.Move(filePath, filePathRenamed);
-        Console.WriteLine($"\n{Path.GetFileName(filePath)} -> {fileName}");
+        Console.WriteLine($"(x) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+      }
+      else if (File.Exists(filePathRenamed) || SimpleIO.Path.Equals(filePath, filePathRenamed))
+      {
+        Console.WriteLine($"(!) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       }
       else
       {
-        Console.WriteLine($"\n[X] {Path.GetFileName(filePath)} -> {fileName}");
+        File.Move(filePath, filePathRenamed);
+        Console.WriteLine($"(v) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       }
 
       filePaths.Remove(filePath);
