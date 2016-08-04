@@ -23,6 +23,7 @@ namespace YPrename
 
       string currentFolderPath = Directory.GetCurrentDirectory();
 
+      Environment.CurrentDirectory = Application.StartupPath;
       var filesToRename = new List<string>(Directory.GetFiles(currentFolderPath, renameFilesOldPattern));
 
       renameFiles(filesToRename);
