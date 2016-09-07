@@ -42,13 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Svetomech.Utilities\NativeMethods.cs" />
-    <Compile Include="Svetomech.Utilities\Application.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Svetomech.Utilities\SimpleConsole.Line.cs" />
-    <Compile Include="Svetomech.Utilities\SimpleIO.cs" />
-    <Compile Include="Svetomech.Utilities\SimplePlatform.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
