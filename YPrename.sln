@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YPrename", "YPrename\YPrename.csproj", "{B50C5CDD-967D-4326-8533-CDC6D6040FBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svetomech.Utilities", "Svetomech.Utilities\Svetomech.Utilities\Svetomech.Utilities.csproj", "{BD22946B-C1BE-4F95-A031-4FC8BFEC09A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B50C5CDD-967D-4326-8533-CDC6D6040FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B50C5CDD-967D-4326-8533-CDC6D6040FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B50C5CDD-967D-4326-8533-CDC6D6040FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD22946B-C1BE-4F95-A031-4FC8BFEC09A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD22946B-C1BE-4F95-A031-4FC8BFEC09A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD22946B-C1BE-4F95-A031-4FC8BFEC09A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD22946B-C1BE-4F95-A031-4FC8BFEC09A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
