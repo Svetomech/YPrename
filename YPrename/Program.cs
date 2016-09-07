@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using static Svetomech.Utilities.NativeMethods;
 using static Svetomech.Utilities.SimpleConsole;
 
 namespace YPrename
@@ -19,7 +18,6 @@ namespace YPrename
     static void Main(string[] args)
     {
       Console.Title = Application.ProductName;
-      mainWindowHandle = GetConsoleWindow();
 
       string currentFolderPath = Application.StartupPath;
 
@@ -53,12 +51,10 @@ namespace YPrename
       if (0 == filePaths.Count)
       {
         Console.Title = Application.ProductName;
-        ShowWindow(mainWindowHandle, SW_HIDE);
         return;
       }
 
       Console.Title = $"{Application.ProductName}: NEW FILE FOUND";
-      ShowWindow(mainWindowHandle, SW_SHOW);
 
       string filePath = filePaths[filePaths.Count - 1];
       string fileDirectory = Path.GetDirectoryName(filePath);
