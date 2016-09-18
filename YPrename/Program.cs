@@ -69,22 +69,22 @@ namespace YPrename
       }
       string filePathRenamed = Path.Combine(fileDirectory, fileName);
 
-      Console.Write($"\n( ) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+      Console.Write($"\n[ ] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       bool renamingAccepted = confirmRenameDialog();
       Line.ClearCurrent();
 
       if (!renamingAccepted)
       {
-        Console.WriteLine($"(x) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+        Console.WriteLine($"[n] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       }
       else if (File.Exists(filePathRenamed) || SimpleIO.Path.Equals(filePath, filePathRenamed))
       {
-        Console.WriteLine($"(!) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+        Console.WriteLine($"[!] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       }
       else
       {
         File.Move(filePath, filePathRenamed);
-        Console.WriteLine($"(v) \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+        Console.WriteLine($"[y] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
       }
 
       filePaths.Remove(filePath);
