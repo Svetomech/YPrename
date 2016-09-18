@@ -12,7 +12,6 @@ namespace YPrename
     private const string renameFilesOldPattern = "YP-*1R-*";
     private const string renameFilesNewPattern = "*";
 
-    private static IntPtr mainWindowHandle;
     // private static AutoResetEvent autoEvent;
 
     static void Main(string[] args)
