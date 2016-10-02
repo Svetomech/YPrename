@@ -9,7 +9,7 @@ namespace YPrename
 {
   internal static class Program
   {
-    private const string renameFilesOldPattern = "YP-*1R-*";
+    private const string renameFilesOldPattern = "YP-*??-*";
     private const string renameFilesNewPattern = "*";
 
     // private static AutoResetEvent autoEvent;
@@ -64,6 +64,25 @@ namespace YPrename
 
       for (int i = 0; i < partsToReplaceWith.Length; ++i)
       {
+        if (partsToReplace[i].Contains("?"))
+        {
+          // Helper variables, only needed to clarify meaning
+          char lastSignificantCharacter = renameFilesOldPattern[renameFilesOldPattern.LastIndexOf('*') - 1];
+          int questionMarkCount = renameFilesOldPattern.Length - renameFilesOldPattern.Replace("?", "").Length;
+
+          // Actual variables
+          int baseDisposition = 0; // ... to keep track of removed question marks
+          int baseIndexOfQM = fileName.LastIndexOf(lastSignificantCharacter) - questionMarkCount; // ... in fileName
+          int indexOfQM = -1; // ... in renameFilesOldPattern
+
+          // Replaces all question marks with actual characters that represent them
+          while (-1 != (indexOfQM = partsToReplace[i].IndexOf("?")))
+          {
+            partsToReplace[i] = partsToReplace[i].Remove(indexOfQM, 1);
+            partsToReplace[i] = partsToReplace[i].Insert(indexOfQM, fileName[baseIndexOfQM + baseDisposition++].ToString());
+          }
+        }
+
         fileName = fileName.Replace(partsToReplace[i], partsToReplaceWith[i]);
       }
       string filePathRenamed = Path.Combine(fileDirectory, fileName);
