@@ -1,8 +1,11 @@
 ﻿using Svetomech.Utilities;
+using Svetomech.Utilities.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using static Svetomech.Utilities.ConsoleApplication;
+using static Svetomech.Utilities.NativeMethods;
 using static Svetomech.Utilities.SimpleConsole;
 
 namespace YPrename
@@ -12,13 +15,14 @@ namespace YPrename
         private const string renameFilesOldPattern = "YP-*??-*";
         private const string renameFilesNewPattern = "*";
 
+        private static readonly Window mainWindow = GetConsoleWindow();
         // private static AutoResetEvent autoEvent;
 
         static void Main(string[] args)
         {
-            Console.Title = Application.ProductName;
+            Console.Title = ProductName;
 
-            string currentFolderPath = ((args.Length > 0) && Directory.Exists(args[0])) ? args[0] : Application.StartupPath;
+            string currentFolderPath = ((args.Length > 0) && Directory.Exists(args[0])) ? args[0] : StartupPath;
 
             var filesToRename = new List<string>(Directory.GetFiles(currentFolderPath, renameFilesOldPattern));
 
@@ -49,11 +53,13 @@ namespace YPrename
         {
             if (0 == filePaths.Count)
             {
-                Console.Title = Application.ProductName;
+                Console.Title = ProductName;
+                mainWindow.Hide();
                 return;
             }
 
-            Console.Title = $"{Application.ProductName}: NEW FILE FOUND";
+            Console.Title = $"{ProductName}: NEW FILE FOUND";
+            mainWindow.Show();
 
             string filePath = filePaths[filePaths.Count - 1];
             string fileDirectory = Path.GetDirectoryName(filePath);
@@ -87,23 +93,26 @@ namespace YPrename
             }
             string filePathRenamed = Path.Combine(fileDirectory, fileName);
 
-            Console.Write($"\n[ ] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+            string logMessage = $"\n[ ] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"";
+
+            Console.Write(logMessage);
             bool renamingAccepted = confirmRenameDialog();
             Line.ClearCurrent();
-
             if (!renamingAccepted)
             {
-                Console.WriteLine($"[n] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+                logMessage = logMessage.Replace("[ ]", "[n]");
             }
             else if (File.Exists(filePathRenamed) || SimpleIO.Path.Equals(filePath, filePathRenamed))
             {
-                Console.WriteLine($"[!] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+                logMessage = logMessage.Replace("[ ]", "[!]");
             }
             else
             {
-                File.Move(filePath, filePathRenamed);
-                Console.WriteLine($"[y] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"");
+                logMessage = logMessage.Replace("[ ]", "[y]");
+                try { File.Move(filePath, filePathRenamed); }
+                catch { logMessage = logMessage.Replace("[ ]", "[!]"); }
             }
+            Console.Write(logMessage);
 
             filePaths.Remove(filePath);
             renameFiles(filePaths);
