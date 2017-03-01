@@ -93,11 +93,12 @@ namespace YPrename
             }
             string filePathRenamed = Path.Combine(fileDirectory, fileName);
 
-            string logMessage = $"\n[ ] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"";
-
+            string logMessage = $"[ ] \"{Path.GetFileName(filePath)}\" -> \"{fileName}\"";
+            Console.WriteLine();
             Console.Write(logMessage);
             bool renamingAccepted = confirmRenameDialog();
             Line.ClearCurrent();
+
             if (!renamingAccepted)
             {
                 logMessage = logMessage.Replace("[ ]", "[n]");
@@ -112,7 +113,8 @@ namespace YPrename
                 try { File.Move(filePath, filePathRenamed); }
                 catch { logMessage = logMessage.Replace("[ ]", "[!]"); }
             }
-            Console.Write(logMessage);
+
+            Console.WriteLine(logMessage);
 
             filePaths.Remove(filePath);
             renameFiles(filePaths);
